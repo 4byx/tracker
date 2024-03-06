@@ -1,14 +1,15 @@
 const express = require('express');
-const path = require('path')
-const app = express();
+const router = require('./routes');
 
-const {PORT} = require('./config/serverConfig');
 
-app.get('/tracking-email' , (req , res) => {
-    console.log("user opened email");
-    res.sendFile(path.join(__dirname + '/image.png'));
-})
 
-app.listen(PORT,() => {
-    console.log("Server started on PORT ::" , PORT);
-})
+const setupAndStartServer = async () => {
+    const app = express();
+    const PORT = process.env.PORT || 3000;
+    app.use('',router);
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+setupAndStartServer();
