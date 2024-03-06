@@ -12,4 +12,13 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-module.exports = transporter;
+const mailOptions = {
+    from: EMAIL,
+    to: "abhimanyu.ahuja.ug20@nsut.ac.in",
+    subject: "Subject",
+};
+
+module.exports = {
+    nodemailer : transporter , 
+    mailOptions
+};

@@ -1,6 +1,6 @@
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const nodemailer = require('../config/nodemailerConfig')
+const {nodemailer , mailOptions} = require('../config/nodemailerConfig');
 
 const track = async (req , res) => {
     try {
@@ -39,6 +39,7 @@ const send = async (req , res) => {
         `;
 
         // Send email
+        mailOptions['html'] = htmlContent;
         const info = await nodemailer.sendMail(mailOptions);
         console.log("Email sent: ", info.messageId);
 

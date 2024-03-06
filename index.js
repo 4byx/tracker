@@ -2,7 +2,6 @@ const express = require('express');
 const router = require('./routes');
 
 
-
 const setupAndStartServer = async () => {
     const app = express();
     const PORT = process.env.PORT || 3000;
