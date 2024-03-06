@@ -50,5 +50,6 @@ const send = async (req , res) => {
 }
 
 module.exports = {
-    track
+    track,
+    send
 }

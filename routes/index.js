@@ -4,6 +4,6 @@ const router = express.Router();
 
 
 router.get('/track-email' , EmailController.track);
-// router.post('/send-email' , EmailController.send);
+router.post('/send-email' , EmailController.send);
 
 module.exports = router;
