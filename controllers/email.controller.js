@@ -1,17 +1,37 @@
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
-const {nodemailer , mailOptions} = require('../config/nodemailerConfig');
+import path from 'path';
+import {v4 as uuidv4} from 'uuid';
+import {transporter,  mailOptions} from '../config/nodemailerConfig.js';
+import {EmailService} from '../service/email.service.js';
+import { fileURLToPath } from 'url';
+
+
+
+
+
+const emailService = new EmailService();
 
 const track = async (req , res) => {
     try {
         const {id} = req.query;
         if(!id) throw new Error('No Id Param is Passed');
+
+
         const date = new Date();
+        await emailService.updateLog({
+            uuid : id , 
+            status: 'opened',
+            openedAt : date
+        })
         console.log("User with id :: " , id , "Opened email at " , date);
+
     }catch (error) {
         console.log("Something wrong in tracking email");
+        throw error;
     }
-    const rootDir = path.resolve(__dirname, '..'); // This will give you the parent directory of the current module
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    const rootDir = path.resolve(__dirname, '..');
     const imagePath = path.join(rootDir, 'image.png');
     res.sendFile(path.join(imagePath));
 }
@@ -40,8 +60,21 @@ const send = async (req , res) => {
 
         // Send email
         mailOptions['html'] = htmlContent;
-        const info = await nodemailer.sendMail(mailOptions);
-        console.log("Email sent: ", info.messageId);
+        const promises = [];
+        const promise1 = transporter.sendMail(mailOptions);
+        const promise2 = emailService.createLog({
+            uuid : uniqueId,
+            senderCompany : 'SIDHu',
+            senderEmail : mailOptions.from,
+            sendAt : new Date(),
+            status : 'sent'
+        })
+        promises.push(promise1);
+        promises.push(promise2);
+
+        await Promise.all(promises);
+        console.log("Email sent: ");
+        console.log("Successfully logged the data of email to mongoDb");
 
         res.status(200).send("Email sent successfully!");
     } catch (error) {
@@ -50,7 +83,7 @@ const send = async (req , res) => {
     }
 }
 
-module.exports = {
+export {
     track,
     send
 }

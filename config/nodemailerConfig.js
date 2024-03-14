@@ -1,7 +1,7 @@
-const { EMAIL, PASSWORD } = require("./serverConfig");
-const nodemailer = require('nodemailer');
+import { EMAIL, PASSWORD } from "./serverConfig.js";
+import nodemailer from 'nodemailer';
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
     host: 'smtppro.zoho.in',
     port: 465,
     secure: true, // SSL
@@ -12,13 +12,8 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const mailOptions = {
+export const mailOptions = {
     from: EMAIL,
     to: "abhimanyu.ahuja.ug20@nsut.ac.in",
     subject: "Subject",
-};
-
-module.exports = {
-    nodemailer : transporter , 
-    mailOptions
 };
